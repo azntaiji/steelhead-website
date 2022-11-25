@@ -1,0 +1,40 @@
+services:
+  mariadb:
+    image: bitnami/mariadb:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_PASSWORD=bitnami
+      - MARIADB_DATABASE=bitnami_wordpress
+    volumes:
+      - mariadb_data:/bitnami/mariadb
+    networks:
+      - wordpress-network
+  wordpress:
+    image: bitnami/wordpress-nginx:latest
+    expose:
+      - "8080"
+      - "8443"
+    volumes:
+      - wordpress_data:/bitnami/wordpress
+    environment:
+      - VIRTUAL_HOST=steelhead.design
+      - DEBUG=true
+      - VIRTUAL_PORT=8080
+      - NGINX_ENABLE_PORT_IN_REDIRECT=yes
+      - ALLOW_EMPTY_PASSWORD=yes
+      - NGINX_ENABLE_ABSOLUTE_REDIRECT=yes
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_PASSWORD=bitnami
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - WORDPRESS_ENABLE_REVERSE_PROXY=yes
+      - WORDPRESS_ENABLE_HTTPS=yes
+    networks:
+      - wordpress-network
+volumes:
+  wordpress_data:
+  mariadb_data:
+networks:
+  wordpress-network:
+    attachable: true
+    name: wordpress-network
