@@ -12,6 +12,7 @@ services:
       - wordpress-network
   wordpress:
     image: bitnami/wordpress-nginx:latest
+    container_name: steelhead-com-wordpress
     expose:
       - "8080"
       - "8443"
